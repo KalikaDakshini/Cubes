@@ -9,7 +9,6 @@ Object::Object(std::vector<float> &vertices, std::vector<unsigned int> &indices)
 // Destructor
 Object::~Object()
 {
-  std::cout << "Destroying Objects" << std::endl;
   glDeleteBuffers(1, &(this->EBO));
   glDeleteBuffers(1, &(this->VBO));
   glDeleteVertexArrays(1, &(this->VAO));

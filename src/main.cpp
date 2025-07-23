@@ -34,8 +34,7 @@ int main()
     3  // second triangle
   };
 
-  Object *rectangle = new Object(vertices, indices);
-  app.add_object(rectangle);
+  app.add_object(vertices, indices);
 
   // Run the application
   app.run();
