@@ -4,7 +4,9 @@
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
+#include <vector>
 
+#include "Object.h"
 #include "Shader.h"
 
 class GLApp
@@ -14,6 +16,7 @@ class GLApp
   const char *_title;
   GLFWwindow *_window;
   Shader *_shader;
+  std::vector<Object *> _objects;
 
   /**
    * @brief Callback function for resizing
@@ -37,12 +40,18 @@ class GLApp
    */
   void render();
 
+  /**
+   * @brief Delete all object pointers
+   */
+  void clear_objects();
+
 public:
   GLApp(int width, int height, const char *title = "My Window");
   ~GLApp();
 
   /**
-   * @brief Initialise GLApp before using it
+   * @brief Initialise GLApp before using it. Should be run before any other
+   * function.
    *
    * @return true if initialisation is a success
    * @return false if initailisation step fails
@@ -53,6 +62,11 @@ public:
    * @brief Main loop of the progrm
    */
   void run();
+
+  /**
+   * @brief Add an object to render list
+   */
+  void add_object(Object *obj);
 };
 
 #endif
