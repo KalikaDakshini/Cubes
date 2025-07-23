@@ -29,6 +29,7 @@ class Shader
 
 public:
   Shader(const std::string &vert_file, const std::string &frag_file);
+  ~Shader();
 
   /**
    * @brief Use the initialised shader program

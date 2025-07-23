@@ -33,6 +33,13 @@ Shader::Shader(const std::string &vert_file, const std::string &frag_file)
   glDeleteShader(frag_shader);
 }
 
+// Destructor
+Shader::~Shader()
+{
+  glDeleteShader(this->prog_id);
+}
+
+// Use the shader
 void Shader::use() const
 {
   glUseProgram(this->prog_id);
