@@ -94,7 +94,7 @@ void GLApp::run()
     last_time = cur_time;
 
     // Transform Objects here
-    this->_objects[0]->rotate(glm::vec3(0.5, 1.0, 0), 50.0 / 60.0);
+    this->_objects[0]->rotate(glm::vec3(1.0, 0.0, 0.7), 50 * dt);
 
     // Render objects
     this->render();
@@ -118,7 +118,7 @@ void GLApp::render()
   this->_shader->use();
   // Set up perspective projection for 3D rendering
   glm::mat4 proj = glm::perspective(
-    glm::radians(45.0f),
+    glm::radians(90.0f),
     (float)this->_width / (float)this->_height,
     0.1f,
     100.0f
