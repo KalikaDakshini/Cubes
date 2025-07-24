@@ -7,6 +7,7 @@
 #include <cmath>
 #include <vector>
 
+#include "Camera.h"
 #include "Object.h"
 #include "Shader.h"
 
@@ -17,7 +18,9 @@ class GLApp
   const char *_title;
   GLFWwindow *_window;
   Shader *_shader;
+  Camera _cam;
   std::vector<Object *> _objects;
+  float dt;
 
   /**
    * @brief Callback function for resizing
@@ -34,6 +37,11 @@ class GLApp
    */
   static void
   key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+
+  /**
+   * @brief Perform an action on keypress
+   */
+  void on_key(int key, int scancode, int action, int mods);
 
   // TODO(kalika): Make this a seperate class
   /**

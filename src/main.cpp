@@ -4,15 +4,14 @@
 
 int main()
 {
-  GLApp app = GLApp(640, 480, "Test Window");
+  GLApp app = GLApp(900, 900, "Test Window");
 
   // Initialise app
   if (!app.init()) {
     return EXIT_FAILURE;
   }
 
-  app.add_object("./data/objects/rectangle.conf");
-  app.add_object("./data/objects/triangle.conf");
+  app.add_object("./data/objects/cube.conf");
 
   // Run the application
   app.run();

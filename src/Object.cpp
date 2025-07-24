@@ -78,9 +78,8 @@ Object::~Object()
 void Object::draw(Shader &shader)
 {
   // Link shader and load values
-  shader.use();
   shader.set_vec3("objColour", this->_colour);
-  shader.set_mat4("transform", this->_transform);
+  shader.set_mat4("model", this->_transform);
 
   // Draw object
   glBindVertexArray(this->VAO);
@@ -109,7 +108,7 @@ void Object::rotate(glm::vec3 axis, float angle)
 // -------- Private Functions -------- //
 // Constructor
 Object::Object(const Obj_spec &spec) :
-  _transform(glm::mat4(1.0f)), _colour(spec.colour)
+  _colour(spec.colour), _transform(glm::mat4(1.0f))
 {
   this->load_object(spec.vertices, spec.indices);
 }

@@ -29,11 +29,11 @@ class Object
   GLuint VAO, VBO, EBO;
   int index_count, vertex_count;
 
-  // Orientation data
-  glm::mat4 _transform;
-
   // Visual data
   glm::vec3 _colour;
+
+  // Orientation data
+  glm::mat4 _transform;
 
   // Constructor
   Object(const Obj_spec &spec);
@@ -52,8 +52,21 @@ public:
    */
   void draw(Shader &shader);
 
-  void move(glm::vec3 position);
+  /**
+   * @brief Move the object along the distance vector
+   */
+  void move(glm::vec3 distance);
+
+  /**
+   * @brief Scale the object
+   */
   void scale(glm::vec3 factor);
+
+  /**
+   * @brief Rotate the object about the axis
+   *
+   * @param angle in degrees
+   */
   void rotate(glm::vec3 axis, float angle);
 };
 

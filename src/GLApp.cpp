@@ -2,6 +2,8 @@
 
 #include "GLApp.h"
 
+#include <glm/glm.hpp>
+
 // Constructor
 GLApp::GLApp(int width, int height, const char *title) :
   _width(width),
@@ -41,10 +43,16 @@ bool GLApp::init()
     return false;
   }
 
-  // Set context and callbacks
+  // Set context
   glfwMakeContextCurrent(this->_window);
+  // Resize callback
   glfwSetFramebufferSizeCallback(this->_window, framebuffer_size_callback);
+  // Keyboard callback
   glfwSetKeyCallback(this->_window, key_callback);
+  glfwSetWindowUserPointer(this->_window, this);
+  // Mouse callback
+  glfwSetCursorPosCallback(this->_window, Camera::mouse_callback);
+  glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   // Load OpenGL functions with GLAD
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -78,15 +86,15 @@ void GLApp::run()
   std::cout << glGetString(GL_VENDOR) << "\n";
   std::cout << glGetString(GL_VERSION) << "\n";
 
-  double dt = 1.0 / 60.0;
-
   // Main loop of window
+  float last_time = glfwGetTime();
   while (!glfwWindowShouldClose(this->_window)) {
-    double time = glfwGetTime();
+    float cur_time = glfwGetTime();
+    this->dt = cur_time - last_time;
+    last_time = cur_time;
 
-    // Move objects here
-    this->_objects[0]->move(glm::vec3(0.5 * cos(time) * dt, 0, 0));
-    this->_objects[1]->move(glm::vec3(-0.5 * cos(time) * dt, 0, 0));
+    // Transform Objects here
+    this->_objects[0]->rotate(glm::vec3(0.5, 1.0, 0), 50.0 / 60.0);
 
     // Render objects
     this->render();
@@ -100,14 +108,25 @@ void GLApp::run()
   this->clear_objects();
 }
 
-// ---------------------
-
 // -------- Private Functions -------- //
 // Render objects to screen
 void GLApp::render()
 {
   glClearColor(0.36F, 0.82F, 0.98F, 1.0F);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  this->_shader->use();
+  // Set up perspective projection for 3D rendering
+  glm::mat4 proj = glm::perspective(
+    glm::radians(45.0f),
+    (float)this->_width / (float)this->_height,
+    0.1f,
+    100.0f
+  );
+  glm::mat4 view = this->_cam.view();
+
+  this->_shader->set_mat4("projection", proj);
+  this->_shader->set_mat4("view", view);
 
   // Draw objects
   for (Object *obj : this->_objects) {
@@ -123,6 +142,29 @@ void GLApp::framebuffer_size_callback(
   glViewport(0, 0, width, height);
 }
 
+void GLApp::on_key(
+  int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods
+)
+{
+  // Close window
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(this->_window, GLFW_TRUE);
+  }
+  // Camera movement
+  if (key == GLFW_KEY_W) {
+    this->_cam.move(FORWARD, this->dt);
+  }
+  if (key == GLFW_KEY_S) {
+    this->_cam.move(BACKWARD, this->dt);
+  }
+  if (key == GLFW_KEY_A) {
+    this->_cam.move(LEFT, this->dt);
+  }
+  if (key == GLFW_KEY_D) {
+    this->_cam.move(RIGHT, this->dt);
+  }
+}
+
 // Key Callback function
 void GLApp::key_callback(
   GLFWwindow *window,
@@ -132,8 +174,9 @@ void GLApp::key_callback(
   [[maybe_unused]] int mods
 )
 {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, GLFW_TRUE);
+  auto *app = static_cast<GLApp *>(glfwGetWindowUserPointer(window));
+  if (app) {
+    app->on_key(key, scancode, action, mods);
   }
 }
 
