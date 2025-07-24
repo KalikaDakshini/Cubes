@@ -45,6 +45,20 @@ void Shader::use() const
   glUseProgram(this->prog_id);
 }
 
+// Set a float
+void Shader::set_float(const std::string &name, float value)
+{
+  glUniform1f(glGetUniformLocation(this->prog_id, name.c_str()), value);
+}
+
+// Set a vec3
+void Shader::set_vec3(const std::string &name, glm::vec3 value)
+{
+  glUniform3f(
+    glGetUniformLocation(this->prog_id, name.c_str()), value.x, value.y, value.z
+  );
+}
+
 //-------- Private Functions -------- //
 // Load shader file from source
 std::string Shader::load_shader(const std::string &path)

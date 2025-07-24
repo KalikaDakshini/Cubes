@@ -1,9 +1,10 @@
 #include "Object.h"
 
 // Constructor
-Object::Object(std::vector<float> &vertices, std::vector<unsigned int> &indices)
+Object::Object(const Obj_spec &spec) :
+  _position(spec.position), _colour(spec.colour)
 {
-  this->load_object(vertices, indices);
+  this->load_object(spec.vertices, spec.indices);
 }
 
 // Destructor
@@ -15,17 +16,16 @@ Object::~Object()
 }
 
 // Draw object once loaded
-void Object::draw(const Shader &shader) const
+void Object::draw(Shader &shader) const
 {
   shader.use();
+  shader.set_vec3("objColour", this->_colour);
   glBindVertexArray(this->VAO);
   glDrawElements(GL_TRIANGLES, this->index_count, GL_UNSIGNED_INT, 0);
 }
 
 // -------- Private Functions -------- //
-void Object::load_object(
-  std::vector<float> &vertices, std::vector<unsigned int> &indices
-)
+void Object::load_object(const Vertices &vertices, const Indices &indices)
 {
   // Record array sizes for later use
   this->index_count = indices.size();

@@ -1,12 +1,13 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-
-#include <glad/glad.h>
 
 class Shader
 {
@@ -35,6 +36,10 @@ public:
    * @brief Use the initialised shader program
    */
   void use() const;
+
+  // Uniform Utility functions
+  void set_float(const std::string &name, float value);
+  void set_vec3(const std::string &name, glm::vec3 value);
 };
 
 #endif

@@ -11,6 +11,7 @@ int main()
     return EXIT_FAILURE;
   }
 
+  // Object data
   std::vector<float> vertices{
     0.5f,
     0.5f,
@@ -33,8 +34,12 @@ int main()
     2,
     3  // second triangle
   };
+  Obj_spec spec{
+    vertices, indices, glm::vec3{0, 0, 0},
+      glm::vec3(0.96f, 0.66f, 0.72f)
+  };
 
-  app.add_object(vertices, indices);
+  app.add_object(spec);
 
   // Run the application
   app.run();

@@ -66,8 +66,7 @@ public:
   /**
    * @brief Add an object to render list
    */
-  void
-  add_object(std::vector<float> &vertices, std::vector<unsigned int> &indices);
+  void add_object(const Obj_spec &spec);
 };
 
 #endif

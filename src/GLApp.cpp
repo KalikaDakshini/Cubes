@@ -64,11 +64,9 @@ bool GLApp::init()
   return true;
 }
 
-void GLApp::add_object(
-  std::vector<float> &vertices, std::vector<unsigned int> &indices
-)
+void GLApp::add_object(const Obj_spec &spec)
 {
-  Object *obj = new Object(vertices, indices);
+  Object *obj = new Object(spec);
   this->_objects.push_back(obj);
 }
 
