@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -19,7 +20,6 @@ class Object
   public:
     Vertices vertices;
     Indices indices;
-    glm::vec3 position;
     glm::vec3 colour;
 
     Obj_spec(const std::string &filepath);
@@ -30,7 +30,7 @@ class Object
   int index_count, vertex_count;
 
   // Orientation data
-  glm::vec3 _position;
+  glm::mat4 _transform;
 
   // Visual data
   glm::vec3 _colour;
@@ -50,7 +50,11 @@ public:
    *
    * @param shader Shader program used to draw
    */
-  void draw(Shader &shader) const;
+  void draw(Shader &shader);
+
+  void move(glm::vec3 position);
+  void scale(glm::vec3 factor);
+  void rotate(glm::vec3 axis, float angle);
 };
 
 #endif

@@ -71,15 +71,24 @@ void GLApp::add_object(const std::string &filepath)
 }
 
 // Main render loop
+// ----------------
 void GLApp::run()
 {
   // Check graphic drivers
   std::cout << glGetString(GL_VENDOR) << "\n";
   std::cout << glGetString(GL_VERSION) << "\n";
 
+  double dt = 1.0 / 60.0;
+
   // Main loop of window
   while (!glfwWindowShouldClose(this->_window)) {
-    // Render objects here
+    double time = glfwGetTime();
+
+    // Move objects here
+    this->_objects[0]->move(glm::vec3(0.5 * cos(time) * dt, 0, 0));
+    this->_objects[1]->move(glm::vec3(-0.5 * cos(time) * dt, 0, 0));
+
+    // Render objects
     this->render();
 
     // Swap buffers and register events
@@ -90,6 +99,8 @@ void GLApp::run()
   // Free memory used by objects
   this->clear_objects();
 }
+
+// ---------------------
 
 // -------- Private Functions -------- //
 // Render objects to screen

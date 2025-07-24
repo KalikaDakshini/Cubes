@@ -59,6 +59,17 @@ void Shader::set_vec3(const std::string &name, glm::vec3 value)
   );
 }
 
+// Set a mat4
+void Shader::set_mat4(const std::string &name, glm::mat4 value)
+{
+  glUniformMatrix4fv(
+    glGetUniformLocation(this->prog_id, name.c_str()),
+    1,
+    GL_FALSE,
+    glm::value_ptr(value)
+  );
+}
+
 //-------- Private Functions -------- //
 // Load shader file from source
 std::string Shader::load_shader(const std::string &path)

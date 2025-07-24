@@ -11,6 +11,7 @@ int main()
     return EXIT_FAILURE;
   }
 
+  app.add_object("./data/objects/rectangle.conf");
   app.add_object("./data/objects/triangle.conf");
 
   // Run the application

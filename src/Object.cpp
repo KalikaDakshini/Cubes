@@ -1,10 +1,7 @@
 #include "Object.h"
 
 // Object Spec functions
-// -------------------
-#include <functional>
-#include <unordered_map>
-
+// ---------------------
 Object::Obj_spec::Obj_spec(const std::string &filepath)
 {
   std::cout << "Reading file " << filepath << std::endl;
@@ -48,12 +45,6 @@ Object::Obj_spec::Obj_spec(const std::string &filepath)
         indices.insert(indices.end(), {a, b, c});
       }
     }
-    // Read position
-    else if (keyword == "position") {
-      float x, y, z;
-      ss >> x >> y >> z;
-      position = glm::vec3(x, y, z);
-    }
     // Read colour
     else if (keyword == "colour") {
       float r, g, b;
@@ -84,18 +75,41 @@ Object::~Object()
 }
 
 // Draw object once loaded
-void Object::draw(Shader &shader) const
+void Object::draw(Shader &shader)
 {
+  // Link shader and load values
   shader.use();
   shader.set_vec3("objColour", this->_colour);
+  shader.set_mat4("transform", this->_transform);
+
+  // Draw object
   glBindVertexArray(this->VAO);
   glDrawElements(GL_TRIANGLES, this->index_count, GL_UNSIGNED_INT, 0);
+}
+
+// Move the object to new position
+void Object::move(glm::vec3 distance)
+{
+  this->_transform = glm::translate(this->_transform, distance);
+}
+
+// Scale the object by desired factor
+void Object::scale(glm::vec3 factor)
+{
+  this->_transform = glm::scale(this->_transform, factor);
+}
+
+// Rotate the object by an angle at the axis
+void Object::rotate(glm::vec3 axis, float angle)
+{
+  axis = glm::normalize(axis);
+  this->_transform = glm::rotate(this->_transform, glm::radians(angle), axis);
 }
 
 // -------- Private Functions -------- //
 // Constructor
 Object::Object(const Obj_spec &spec) :
-  _position(spec.position), _colour(spec.colour)
+  _transform(glm::mat4(1.0f)), _colour(spec.colour)
 {
   this->load_object(spec.vertices, spec.indices);
 }

@@ -19,7 +19,7 @@ CC := g++
 CXXFLAGS := -c -MMD -MP\
 	-std=c++20 -Wall -Wextra -Wshadow -pedantic -Werror
 LDFLAGS :=
-LDLIBS := -lglfw3 -ldl -lGL
+LDLIBS := -lglfw3 -ldl -lGL -lm
 
 # Debug options
 DEBUG ?= 0

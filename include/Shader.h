@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -40,6 +41,7 @@ public:
   // Uniform Utility functions
   void set_float(const std::string &name, float value);
   void set_vec3(const std::string &name, glm::vec3 value);
+  void set_mat4(const std::string &name, glm::mat4 value);
 };
 
 #endif
