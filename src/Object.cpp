@@ -1,11 +1,79 @@
 #include "Object.h"
 
-// Constructor
-Object::Object(const Obj_spec &spec) :
-  _position(spec.position), _colour(spec.colour)
+// Object Spec functions
+// -------------------
+#include <functional>
+#include <unordered_map>
+
+Object::Obj_spec::Obj_spec(const std::string &filepath)
 {
-  this->load_object(spec.vertices, spec.indices);
+  std::cout << "Reading file " << filepath << std::endl;
+
+  std::ifstream infile(filepath);
+  if (!infile.is_open()) {
+    throw std::runtime_error("Cannot open file: " + filepath);
+  }
+
+  std::string line;
+  while (std::getline(infile, line)) {
+    // Skip whitespace and comments
+    line.erase(0, line.find_first_not_of(" \t\r\n"));
+    line.erase(line.find_last_not_of(" \t\r\n") + 1);
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    // Get keyword
+    std::stringstream ss(line);
+    std::string keyword;
+    ss >> keyword;
+
+    // Read vertices
+    if (keyword == "verts") {
+      int count;
+      ss >> count;
+      for (int i = 0; i < count; ++i) {
+        float x, y, z;
+        infile >> x >> y >> z;
+        vertices.insert(vertices.end(), {x, y, z});
+      }
+    }
+    // Read indices
+    else if (keyword == "indices") {
+      int count;
+      ss >> count;
+      for (int i = 0; i < count; ++i) {
+        unsigned int a, b, c;
+        infile >> a >> b >> c;
+        indices.insert(indices.end(), {a, b, c});
+      }
+    }
+    // Read position
+    else if (keyword == "position") {
+      float x, y, z;
+      ss >> x >> y >> z;
+      position = glm::vec3(x, y, z);
+    }
+    // Read colour
+    else if (keyword == "colour") {
+      float r, g, b;
+      ss >> r >> g >> b;
+      colour = glm::vec3(r, g, b);
+    }
+    // Report error
+    else {
+      std::cerr << "Unknown keyword: " << keyword << '\n';
+    }
+  }
+
+  infile.close();
 }
+
+// Object Functions
+// ----------------
+// Constructor
+Object::Object(const std::string &filepath) : Object(Obj_spec(filepath))
+{}
 
 // Destructor
 Object::~Object()
@@ -25,6 +93,13 @@ void Object::draw(Shader &shader) const
 }
 
 // -------- Private Functions -------- //
+// Constructor
+Object::Object(const Obj_spec &spec) :
+  _position(spec.position), _colour(spec.colour)
+{
+  this->load_object(spec.vertices, spec.indices);
+}
+
 void Object::load_object(const Vertices &vertices, const Indices &indices)
 {
   // Record array sizes for later use

@@ -64,9 +64,9 @@ public:
   void run();
 
   /**
-   * @brief Add an object to render list
+   * @brief Add an object to render list from file
    */
-  void add_object(const Obj_spec &spec);
+  void add_object(const std::string &filepath);
 };
 
 #endif

@@ -1,7 +1,10 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <fstream>
 #include <glm/glm.hpp>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "Shader.h"
@@ -9,25 +12,19 @@
 using Vertices = std::vector<float>;
 using Indices = std::vector<unsigned int>;
 
-struct Obj_spec {
-  const Vertices &vertices;
-  const Indices &indices;
-  const glm::vec3 position;
-  const glm::vec3 colour;
-
-  Obj_spec(
-    const Vertices &v,
-    const Indices &i,
-    glm::vec3 pos = glm::vec3(0, 0, 0),
-    glm::vec3 clr = glm::vec3(1, 1, 1)
-  ) :
-    vertices(v), indices(i), position(pos), colour(clr)
-  {}
-};
-
 class Object
-
 {
+  class Obj_spec
+  {
+  public:
+    Vertices vertices;
+    Indices indices;
+    glm::vec3 position;
+    glm::vec3 colour;
+
+    Obj_spec(const std::string &filepath);
+  };
+
   // Vertex data
   GLuint VAO, VBO, EBO;
   int index_count, vertex_count;
@@ -38,11 +35,14 @@ class Object
   // Visual data
   glm::vec3 _colour;
 
+  // Constructor
+  Object(const Obj_spec &spec);
+
   // Load Object data into GPU's memory
   void load_object(const Vertices &vertices, const Indices &indices);
 
 public:
-  Object(const Obj_spec &spec);
+  Object(const std::string &filepath);
   ~Object();
 
   /**

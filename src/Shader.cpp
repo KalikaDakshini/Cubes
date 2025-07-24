@@ -64,9 +64,13 @@ void Shader::set_vec3(const std::string &name, glm::vec3 value)
 std::string Shader::load_shader(const std::string &path)
 {
   std::ifstream infile(path);
+  if (!infile.is_open()) {
+    throw std::runtime_error("Cannot open file: " + path);
+  }
   std::stringstream ss;
   ss << infile.rdbuf();
 
+  infile.close();
   return ss.str();
 }
 
